@@ -78,7 +78,6 @@ namespace ATM
             var sortList = s.OrderByDescending(i => i);
             foreach (int c in sortList)
             {
-                System.Console.WriteLine(">>" + c);
                 int k = 0;
                 for (; ; )
                 {
@@ -230,29 +229,39 @@ namespace ATM
 
         private void button16_Click(object sender, EventArgs e)
         {
-            QLiteConnection.Open();
-            LiteConnection.Open();
-            SQLiteCommand command_c = new SQLiteCommand("UPDATE[Card] SET [account_balance]=@account_balance WHERE [card_number]=@card_number", QLiteConnection);
-            SQLiteCommand command_m = new SQLiteCommand();
-
-            command_c.Parameters.AddWithValue("card_number", fileRead);
+            
+            //SQLiteCommand command_c = new SQLiteCommand("UPDATE[Card] SET [account_balance]=@account_balance WHERE [card_number]=@card_number", QLiteConnection);
+            //command_c.Parameters.AddWithValue("card_number", fileRead);
             //command_c.Parameters.AddWithValue("account_balance",);
-
+           
 
 
             System.Windows.Forms.Button button = (System.Windows.Forms.Button)(sender);
             string buttonvalue = button.Text;
             int request=Convert.ToInt32(button.Text);
             Hashtable ret = GlobalCheck(request);
-           
-            /* if (ret!=null)
-            {
+            LiteConnection.Open();
+            
+            if (ret!=null)
+             {
                 foreach (DictionaryEntry de in ret)
                 {
-                    System.Console.WriteLine(de.Key + "\t" + de.Value);
+
+                    //System.Console.WriteLine(de.Key + "\t" + de.Value);
+                    int bb = Convert.ToInt32(de.Key);
+                    int aa = Convert.ToInt32(de.Value);
+                    SQLiteCommand command_m = new SQLiteCommand("UPDATE[Money] SET [number]=(SELECT number FROM Money WHERE [value]=@value)-@number WHERE [value]=@value", LiteConnection);
+                    command_m.Parameters.AddWithValue("value",bb);
+                    command_m.Parameters.AddWithValue("number",aa);
+                    command_m.ExecuteNonQuery();
                 }
+
+
+             }
+            if (LiteConnection != null)
+            {
+                LiteConnection.Close();
             }
-            */
         }
 
         private void button23_Click(object sender, EventArgs e)
@@ -285,7 +294,30 @@ namespace ATM
         private void button35_Click(object sender, EventArgs e)
         {
             string ww = textBox2.Text;
-            GlobalCheck(Convert.ToInt32(ww));
+            //GlobalCheck(Convert.ToInt32(ww));
+            Hashtable ret = GlobalCheck(Convert.ToInt32(ww));
+            LiteConnection.Open();
+
+            if (ret != null)
+            {
+                foreach (DictionaryEntry de in ret)
+                {
+
+                    //System.Console.WriteLine(de.Key + "\t" + de.Value);
+                    int bb = Convert.ToInt32(de.Key);
+                    int aa = Convert.ToInt32(de.Value);
+                    SQLiteCommand command_m = new SQLiteCommand("UPDATE[Money] SET [number]=(SELECT number FROM Money WHERE [value]=@value)-@number WHERE [value]=@value", LiteConnection);
+                    command_m.Parameters.AddWithValue("value", bb);
+                    command_m.Parameters.AddWithValue("number", aa);
+                    command_m.ExecuteNonQuery();
+                }
+
+
+            }
+            if (LiteConnection != null)
+            {
+                LiteConnection.Close();
+            }
         }
     }
 }

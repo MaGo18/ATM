@@ -453,7 +453,7 @@
             this.tableLayoutPanel4.ColumnCount = 3;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.70833F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 82.29167F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 134F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 135F));
             this.tableLayoutPanel4.Controls.Add(this.button16, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.button17, 2, 0);
             this.tableLayoutPanel4.Controls.Add(this.button18, 0, 1);
@@ -488,7 +488,7 @@
             // button17
             // 
             this.button17.Font = new System.Drawing.Font("Maiandra GD", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button17.Location = new System.Drawing.Point(638, 3);
+            this.button17.Location = new System.Drawing.Point(637, 3);
             this.button17.Name = "button17";
             this.button17.Size = new System.Drawing.Size(117, 75);
             this.button17.TabIndex = 1;
@@ -510,7 +510,7 @@
             // button19
             // 
             this.button19.Font = new System.Drawing.Font("Maiandra GD", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button19.Location = new System.Drawing.Point(638, 135);
+            this.button19.Location = new System.Drawing.Point(637, 135);
             this.button19.Name = "button19";
             this.button19.Size = new System.Drawing.Size(106, 75);
             this.button19.TabIndex = 3;
@@ -532,7 +532,7 @@
             // button21
             // 
             this.button21.Font = new System.Drawing.Font("Maiandra GD", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button21.Location = new System.Drawing.Point(638, 267);
+            this.button21.Location = new System.Drawing.Point(637, 267);
             this.button21.Name = "button21";
             this.button21.Size = new System.Drawing.Size(106, 75);
             this.button21.TabIndex = 5;
@@ -554,7 +554,7 @@
             // button23
             // 
             this.button23.Font = new System.Drawing.Font("Maiandra GD", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button23.Location = new System.Drawing.Point(638, 399);
+            this.button23.Location = new System.Drawing.Point(637, 399);
             this.button23.Name = "button23";
             this.button23.Size = new System.Drawing.Size(106, 75);
             this.button23.TabIndex = 7;
