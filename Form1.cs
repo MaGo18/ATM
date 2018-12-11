@@ -24,6 +24,30 @@ namespace ATM
         private SQLiteConnection QLiteConnection = new SQLiteConnection("Data Source = ATMCARDS.db");
         private SQLiteConnection LiteConnection = new SQLiteConnection("Data Source = ATMMONEY.db");
 
+        private void Withdraw(int req)
+        {
+            int request = req;
+            Hashtable ret = GlobalCheck(request);
+            LiteConnection.Open();
+            if (ret != null)
+            {
+                foreach (DictionaryEntry de in ret)
+                {
+                    int value = Convert.ToInt32(de.Key);
+                    int number = Convert.ToInt32(de.Value);
+                    MessageBox.Show("Bill:> " + value.ToString() + "\t" + "Quantity:> " + number.ToString(), "OPERATION SUCCESFUL", MessageBoxButtons.OK);
+                    SQLiteCommand command_m = new SQLiteCommand("UPDATE[Money] SET [number]=(SELECT number FROM Money WHERE [value]=@value)-@number WHERE [value]=@value", LiteConnection);
+                    command_m.Parameters.AddWithValue("value", value);
+                    command_m.Parameters.AddWithValue("number", number);
+                    command_m.ExecuteNonQuery();
+                }
+
+                if (LiteConnection != null)
+                {
+                    LiteConnection.Close();
+                }
+            }
+        }
         private Hashtable GlobalCheck(int req)
         {
             int sum = 0;
@@ -101,26 +125,26 @@ namespace ATM
             System.Console.WriteLine("\n req:" + req);
             foreach (DictionaryEntry de in ret_money)
             {
-                System.Console.WriteLine(de.Key + "  " + de.Value);
+               System.Console.WriteLine(de.Key + "  " + de.Value); 
             }
             return ret_money;
         }
-        private void button1_Click(object sender, EventArgs e)
+        private void btnPin_Click(object sender, EventArgs e)
         {
-            if (textBox1.TextLength < 4)
+            if (textPin.TextLength < 4)
             {
                 System.Windows.Forms.Button button = (System.Windows.Forms.Button)(sender);
                 string buttonname = button.Text;
-                textBox1.Text += buttonname;
+                textPin.Text += buttonname;
             }
         }
 
         private void btnclear_Click(object sender, EventArgs e)
         {
-            string s = textBox1.Text;
-            if (textBox1.TextLength != 0)
+            string s = textPin.Text;
+            if (textPin.TextLength != 0)
             {
-                textBox1.Text = s.Substring(0, s.Length - 1);
+                textPin.Text = s.Substring(0, s.Length - 1);
             }
             else MessageBox.Show("String is empty");
 
@@ -130,9 +154,9 @@ namespace ATM
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
 
-            if (!string.IsNullOrEmpty(textBox1.Text) && !string.IsNullOrWhiteSpace(textBox1.Text))
+            if (!string.IsNullOrEmpty(textPin.Text) && !string.IsNullOrWhiteSpace(textPin.Text))
             {
-                string parol = textBox1.Text;
+                string parol = textPin.Text;
                 tabControl1.SelectTab(1);
             }
             else MessageBox.Show("Enter, pin code", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -140,29 +164,29 @@ namespace ATM
 
         }
 
-        private void button11_Click(object sender, EventArgs e)
+        private void btnBack_Click(object sender, EventArgs e)
         {
             tabControl1.SelectTab(0);
         }
 
-        private void button13_Click(object sender, EventArgs e)
+        private void btnBalanceCheck_Click(object sender, EventArgs e)
         {
             QLiteConnection.Open();
             SQLiteDataReader sQLiteData = null;
             SQLiteCommand liteCommand = new SQLiteCommand("SELECT account_balance FROM[Card] WHERE card_password = @card_password and card_number = @card_number", QLiteConnection);
-            liteCommand.Parameters.AddWithValue("card_password", textBox1.Text);
+            liteCommand.Parameters.AddWithValue("card_password", textPin.Text);
             liteCommand.Parameters.AddWithValue("card_number", fileRead);
             try
             {
                 sQLiteData = liteCommand.ExecuteReader();
-                listBox1.Items.Clear();
+                listBalance.Items.Clear();
                 while (sQLiteData.Read())
                 {
-                    listBox1.Items.Add("Balance in card: " + sQLiteData["account_balance"]);
-                    listBox1.Items.Add("Date:" + DateTime.Now);
-                    listBox1.Items.Add("ATM number #00001;");
-                    listBox1.Items.Add("Card_Number:" + fileRead);
-                    listBox1.Items.Add("*******************");
+                    listBalance.Items.Add("Balance in card: " + sQLiteData["account_balance"]);
+                    listBalance.Items.Add("Date:" + DateTime.Now);
+                    listBalance.Items.Add("ATM number #00001;");
+                    listBalance.Items.Add("Card_Number:" + fileRead);
+                    listBalance.Items.Add("*******************");
 
 
                 }
@@ -182,14 +206,14 @@ namespace ATM
             tabControl1.SelectTab(2);
         }
 
-        private void button12_Click(object sender, EventArgs e)
+        private void btnCash_Click(object sender, EventArgs e)
         {
             tabControl1.SelectTab(3);
         }
 
-        private void button14_Click(object sender, EventArgs e)
+        private void btnDownloadCard_Click(object sender, EventArgs e)
         {
-            button14.Image = Image.FromFile(@"D:\Education\ATM_C#\button_off.png");
+            btnDownloadCard.Image = Image.FromFile(@"D:\Education\ATM_C#\button_off.png");
             OpenFileDialog dialog = new OpenFileDialog();
 
             dialog.Filter = "Text file |*.txt";
@@ -202,16 +226,16 @@ namespace ATM
                     fileRead = reader.ReadToEnd();
                 }
             }
-            button14.Image = Image.FromFile(@"D:\Education\ATM_C#\button_on.png");
+            btnDownloadCard.Image = Image.FromFile(@"D:\Education\ATM_C#\button_on.png");
         }
 
         private void Form1_Load_1(object sender, EventArgs e)
         {
-            textBox1.PasswordChar = '*';
-            button14.Image = Image.FromFile(@"D:\Education\ATM_C#\button_off.png");
+            textPin.PasswordChar = '*';
+            btnDownloadCard.Image = Image.FromFile(@"D:\Education\ATM_C#\button_off.png");
         }
 
-        private void button15_Click(object sender, EventArgs e)
+        private void btnBack2_Click(object sender, EventArgs e)
         {
             tabControl1.SelectTab(1);
         }
@@ -222,102 +246,49 @@ namespace ATM
                 QLiteConnection.Close();
         }
 
-        private void button22_Click(object sender, EventArgs e)
+        private void btnBack3_Click(object sender, EventArgs e)
         {
             tabControl1.SelectTab(1);
         }
 
-        private void button16_Click(object sender, EventArgs e)
+        private void btnWithdraw_Click(object sender, EventArgs e)
         {
-            
-            //SQLiteCommand command_c = new SQLiteCommand("UPDATE[Card] SET [account_balance]=@account_balance WHERE [card_number]=@card_number", QLiteConnection);
-            //command_c.Parameters.AddWithValue("card_number", fileRead);
-            //command_c.Parameters.AddWithValue("account_balance",);
-           
-
-
             System.Windows.Forms.Button button = (System.Windows.Forms.Button)(sender);
             string buttonvalue = button.Text;
-            int request=Convert.ToInt32(button.Text);
-            Hashtable ret = GlobalCheck(request);
-            LiteConnection.Open();
-            
-            if (ret!=null)
-             {
-                foreach (DictionaryEntry de in ret)
-                {
-
-                    //System.Console.WriteLine(de.Key + "\t" + de.Value);
-                    int bb = Convert.ToInt32(de.Key);
-                    int aa = Convert.ToInt32(de.Value);
-                    SQLiteCommand command_m = new SQLiteCommand("UPDATE[Money] SET [number]=(SELECT number FROM Money WHERE [value]=@value)-@number WHERE [value]=@value", LiteConnection);
-                    command_m.Parameters.AddWithValue("value",bb);
-                    command_m.Parameters.AddWithValue("number",aa);
-                    command_m.ExecuteNonQuery();
-                }
-
-
-             }
-            if (LiteConnection != null)
-            {
-                LiteConnection.Close();
-            }
+            Withdraw(Convert.ToInt32(buttonvalue));
         }
 
-        private void button23_Click(object sender, EventArgs e)
+        private void btnOther_Click(object sender, EventArgs e)
         {
             tabControl1.SelectTab(4);
         }
 
-        private void button36_Click(object sender, EventArgs e)
+        private void btnBack4_Click(object sender, EventArgs e)
         {
             tabControl1.SelectTab(3);
         }
 
-        private void button24_Click(object sender, EventArgs e)
+        private void btnOtherMoney_Click(object sender, EventArgs e)
         {
             System.Windows.Forms.Button button = (System.Windows.Forms.Button)(sender);
             string buttonname = button.Text;
-            textBox2.Text += buttonname;
+            textMoney.Text += buttonname;
         }
 
-        private void button34_Click(object sender, EventArgs e)
+        private void btnMoneyDel_Click(object sender, EventArgs e)
         {
-            string s = textBox2.Text;
-            if (textBox2.TextLength != 0)
+            string s = textMoney.Text;
+            if (textMoney.TextLength != 0)
             {
-                textBox2.Text = s.Substring(0, s.Length - 1);
+                textMoney.Text = s.Substring(0, s.Length - 1);
             }
             else MessageBox.Show("String is empty");
         }
 
-        private void button35_Click(object sender, EventArgs e)
+        private void btnMoneyOk_Click(object sender, EventArgs e)
         {
-            string ww = textBox2.Text;
-            //GlobalCheck(Convert.ToInt32(ww));
-            Hashtable ret = GlobalCheck(Convert.ToInt32(ww));
-            LiteConnection.Open();
-
-            if (ret != null)
-            {
-                foreach (DictionaryEntry de in ret)
-                {
-
-                    //System.Console.WriteLine(de.Key + "\t" + de.Value);
-                    int bb = Convert.ToInt32(de.Key);
-                    int aa = Convert.ToInt32(de.Value);
-                    SQLiteCommand command_m = new SQLiteCommand("UPDATE[Money] SET [number]=(SELECT number FROM Money WHERE [value]=@value)-@number WHERE [value]=@value", LiteConnection);
-                    command_m.Parameters.AddWithValue("value", bb);
-                    command_m.Parameters.AddWithValue("number", aa);
-                    command_m.ExecuteNonQuery();
-                }
-
-
-            }
-            if (LiteConnection != null)
-            {
-                LiteConnection.Close();
-            }
+            string MoneyValue = textMoney.Text;
+            Withdraw(Convert.ToInt32(MoneyValue));
         }
     }
 }
