@@ -23,14 +23,16 @@ namespace ATM
         private string fileRead = string.Empty;
         private SQLiteConnection QLiteConnection = new SQLiteConnection("Data Source = ATMCARDS.db");
         private SQLiteConnection LiteConnection = new SQLiteConnection("Data Source = ATMMONEY.db");
-
+        private string parol=string.Empty;
         private void Withdraw(int req)
         {
             int request = req;
             Hashtable ret = GlobalCheck(request);
             LiteConnection.Open();
+            QLiteConnection.Open();
             if (ret != null)
             {
+
                 foreach (DictionaryEntry de in ret)
                 {
                     int value = Convert.ToInt32(de.Key);
@@ -41,10 +43,15 @@ namespace ATM
                     command_m.Parameters.AddWithValue("number", number);
                     command_m.ExecuteNonQuery();
                 }
-
-                if (LiteConnection != null)
+                SQLiteCommand command_c = new SQLiteCommand("UPDATE[Card] SET[account_balance]=(SELECT account_balance FROM card WHERE [card_number]=@card_number AND [card_password]=@card_password)-@account_balance WHERE [card_number]=@card_number AND [card_password]=@card_password", QLiteConnection);
+                command_c.Parameters.AddWithValue("account_balance", request);
+                command_c.Parameters.AddWithValue("card_password", parol);
+                command_c.Parameters.AddWithValue("card_number", fileRead);
+                command_c.ExecuteNonQuery();
+                if (LiteConnection != null || QLiteConnection != null)
                 {
                     LiteConnection.Close();
+                    QLiteConnection.Close();
                 }
             }
         }
@@ -152,11 +159,9 @@ namespace ATM
 
         private void btnok_Click(object sender, EventArgs e)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
-
             if (!string.IsNullOrEmpty(textPin.Text) && !string.IsNullOrWhiteSpace(textPin.Text))
             {
-                string parol = textPin.Text;
+                parol = textPin.Text;
                 tabControl1.SelectTab(1);
             }
             else MessageBox.Show("Enter, pin code", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
